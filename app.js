@@ -366,6 +366,6 @@ document.getElementById('btn-signout').addEventListener('click', () => {
 
 // ─── Boot ─────────────────────────────────────────────────────────────────────
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js').catch(e => console.warn('SW:', e));
+  navigator.serviceWorker.register('./sw.js').catch(e => console.warn('SW:', e));
 }
 loadGoogleAuth();
