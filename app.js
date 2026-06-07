@@ -46,6 +46,25 @@ function stopBookmarkTimer() {
 
 const audio = document.getElementById('audio');
 
+// ─── Session persistence ──────────────────────────────────────────────────────
+function saveSession(token) {
+  localStorage.setItem('goog_token', token);
+  localStorage.setItem('goog_token_expiry', Date.now() + 55 * 60 * 1000);
+  localStorage.setItem('goog_authed', '1');
+}
+
+function clearSession() {
+  localStorage.removeItem('goog_token');
+  localStorage.removeItem('goog_token_expiry');
+  localStorage.removeItem('goog_authed');
+}
+
+function getStoredToken() {
+  const token = localStorage.getItem('goog_token');
+  const expiry = parseInt(localStorage.getItem('goog_token_expiry') || '0');
+  return token && expiry > Date.now() ? token : null;
+}
+
 // ─── Google Identity Services ─────────────────────────────────────────────────
 function loadGoogleAuth() {
   const script = document.createElement('script');
@@ -61,14 +80,24 @@ function initTokenClient() {
     scope: 'https://www.googleapis.com/auth/drive.readonly',
     callback: onTokenReceived,
   });
+
+  const stored = getStoredToken();
+  if (stored) {
+    accessToken = stored;
+    showScreen('list');
+    loadAllFiles();
+  } else if (localStorage.getItem('goog_authed')) {
+    tokenClient.requestAccessToken({ prompt: '' });
+  }
 }
 
 function onTokenReceived(response) {
   if (response.error) {
-    showSignInError('כניסה נכשלה: ' + response.error);
+    if (!accessToken) showSignInError('כניסה נכשלה: ' + response.error);
     return;
   }
   accessToken = response.access_token;
+  saveSession(accessToken);
   showScreen('list');
   loadAllFiles();
 }
@@ -356,6 +385,7 @@ document.getElementById('btn-play').addEventListener('click', togglePlayPause);
 document.getElementById('btn-prev').addEventListener('click', playPrev);
 document.getElementById('btn-next').addEventListener('click', playNext);
 document.getElementById('btn-signout').addEventListener('click', () => {
+  clearSession();
   accessToken = null;
   audio.pause();
   audio.src = '';
