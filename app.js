@@ -16,8 +16,18 @@ let currentFileIndex = -1;
 let filesList = [];
 let seekingByUser = false;
 let bookmarkInterval = null;
+const SPEEDS = [0.75, 1, 1.25, 1.5, 2];
+let speedIndex = 1;
 
 // ─── Bookmarks ────────────────────────────────────────────────────────────────
+function markPlayed(fileId) {
+  localStorage.setItem('done_' + fileId, '1');
+  document.querySelectorAll(`.file-item[data-id="${fileId}"]`).forEach(el => el.classList.add('played'));
+}
+function isPlayed(fileId) {
+  return !!localStorage.getItem('done_' + fileId);
+}
+
 function saveBookmark(fileId, position) {
   if (!fileId || position < 5) return; // don't save if < 5 sec in
   localStorage.setItem('bm_' + fileId, Math.floor(position));
@@ -244,10 +254,11 @@ function renderFiles(files) {
 
   files.forEach(file => {
     const item = document.createElement('div');
-    item.className = 'file-item';
+    item.className = 'file-item' + (isPlayed(file.id) ? ' played' : '');
     item.dataset.id = file.id;
     item.dataset.name = file.name;
     item.dataset.date = file.createdTime;
+    const bookmark = loadBookmark(file.id);
     item.innerHTML = `
       <div class="file-item-icon">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -256,7 +267,7 @@ function renderFiles(files) {
       </div>
       <div class="file-item-text">
         <div class="file-item-name">${cleanName(file.name)}</div>
-        <div class="file-item-date">${formatDate(file.createdTime)}${loadBookmark(file.id) > 0 ? ` · ↩ ${fmtTime(loadBookmark(file.id))}` : ''}</div>
+        <div class="file-item-date">${formatDate(file.createdTime)}${bookmark > 0 ? ` · ↩ ${fmtTime(bookmark)}` : ''}${isPlayed(file.id) ? ' · ✓' : ''}</div>
       </div>
     `;
     item.addEventListener('click', () => playFile(file.id, file.name, file.createdTime));
@@ -273,14 +284,26 @@ async function playFile(fileId, name, date) {
     el.classList.toggle('active', el.dataset.id === fileId);
   });
 
-  document.getElementById('player-title').textContent = cleanName(name);
+  const cleanTitle = cleanName(name);
+  document.getElementById('player-title').textContent = cleanTitle;
   document.getElementById('player-bar').classList.remove('hidden');
+
+  if ('mediaSession' in navigator) {
+    navigator.mediaSession.metadata = new MediaMetadata({ title: cleanTitle, artist: 'ידידיה' });
+    navigator.mediaSession.setActionHandler('play', () => audio.play());
+    navigator.mediaSession.setActionHandler('pause', () => audio.pause());
+    navigator.mediaSession.setActionHandler('previoustrack', playPrev);
+    navigator.mediaSession.setActionHandler('nexttrack', playNext);
+    navigator.mediaSession.setActionHandler('seekbackward', () => { audio.currentTime = Math.max(0, audio.currentTime - 15); });
+    navigator.mediaSession.setActionHandler('seekforward', () => { audio.currentTime = Math.min(audio.duration || 0, audio.currentTime + 30); });
+  }
 
   audio.pause();
 
   document.getElementById('player-seek').value = 0;
   document.getElementById('player-pos').textContent = '0:00';
   document.getElementById('player-dur').textContent = '0:00';
+  audio.playbackRate = SPEEDS[speedIndex];
 
   try {
     // Wait for service worker to be ready (handles auth header injection)
@@ -348,7 +371,7 @@ audio.addEventListener('pause', () => {
 audio.addEventListener('ended', () => {
   document.getElementById('icon-play').classList.remove('hidden');
   document.getElementById('icon-pause').classList.add('hidden');
-  if (currentFileId) clearBookmark(currentFileId);
+  if (currentFileId) { clearBookmark(currentFileId); markPlayed(currentFileId); }
   stopBookmarkTimer();
   playNext();
 });
@@ -358,6 +381,9 @@ audio.addEventListener('timeupdate', () => {
   document.getElementById('player-seek').value = pct;
   document.getElementById('player-pos').textContent = fmtTime(audio.currentTime);
   document.getElementById('player-dur').textContent = fmtTime(audio.duration);
+  if ('mediaSession' in navigator && navigator.mediaSession.setPositionState) {
+    navigator.mediaSession.setPositionState({ duration: audio.duration, position: audio.currentTime, playbackRate: audio.playbackRate });
+  }
 });
 
 const seekSlider = document.getElementById('player-seek');
@@ -384,6 +410,17 @@ document.getElementById('btn-signin').addEventListener('click', requestToken);
 document.getElementById('btn-play').addEventListener('click', togglePlayPause);
 document.getElementById('btn-prev').addEventListener('click', playPrev);
 document.getElementById('btn-next').addEventListener('click', playNext);
+document.getElementById('btn-skip-back').addEventListener('click', () => {
+  audio.currentTime = Math.max(0, audio.currentTime - 15);
+});
+document.getElementById('btn-skip-fwd').addEventListener('click', () => {
+  audio.currentTime = Math.min(audio.duration || 0, audio.currentTime + 30);
+});
+document.getElementById('btn-speed').addEventListener('click', () => {
+  speedIndex = (speedIndex + 1) % SPEEDS.length;
+  audio.playbackRate = SPEEDS[speedIndex];
+  document.getElementById('btn-speed').textContent = SPEEDS[speedIndex] + '×';
+});
 document.getElementById('btn-signout').addEventListener('click', () => {
   clearSession();
   accessToken = null;

@@ -54,23 +54,36 @@
     </div>
   </div>
 
-  <!-- Player bar (persistent bottom bar, shown when a file is active) -->
+  <!-- Player bar -->
   <div id="player-bar" class="player-bar hidden">
-    <div class="player-info">
+    <div class="player-top-row">
       <div id="player-title" class="player-title"></div>
+      <button id="btn-speed" class="btn-speed" aria-label="מהירות ניגון">1×</button>
     </div>
     <div class="player-controls">
       <button id="btn-prev" class="btn-ctrl" aria-label="הקודם">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linecap="round">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linecap="round">
           <polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5" stroke-width="2"/>
         </svg>
+      </button>
+      <button id="btn-skip-back" class="btn-ctrl" aria-label="אחורה 15 שניות">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.53"/>
+        </svg>
+        <span class="skip-label">15</span>
       </button>
       <button id="btn-play" class="btn-ctrl btn-play-pause" aria-label="נגן/עצור">
         <svg id="icon-play" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
         <svg id="icon-pause" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" class="hidden"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
       </button>
+      <button id="btn-skip-fwd" class="btn-ctrl" aria-label="קדימה 30 שניות">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.49-3.53"/>
+        </svg>
+        <span class="skip-label">30</span>
+      </button>
       <button id="btn-next" class="btn-ctrl" aria-label="הבא">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linecap="round">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linecap="round">
           <polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19" stroke-width="2"/>
         </svg>
       </button>

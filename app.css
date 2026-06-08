@@ -9,7 +9,7 @@
   --bg: #f7f8fa;
   --white: #ffffff;
   --error: #e53e3e;
-  --bar-height: 120px;
+  --bar-height: 140px;
 }
 
 html, body {
@@ -135,6 +135,8 @@ html, body {
 }
 .file-item.active .file-item-name { color: var(--green); font-weight: 600; }
 .file-item-date { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
+.file-item.played .file-item-name { color: var(--text-muted); }
+.file-item.played .file-item-icon { background: #f0f0f0; color: #aaa; }
 
 /* ── Loading ── */
 .loading-overlay {
@@ -161,18 +163,21 @@ html, body {
   bottom: 0; left: 0; right: 0;
   height: var(--bar-height);
   background: #111;
-  padding: 8px 20px 12px;
+  padding: 8px 16px 10px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   z-index: 20;
   direction: ltr;
 }
-.player-info {
-  text-align: center;
+.player-top-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   overflow: hidden;
 }
 .player-title {
+  flex: 1;
   font-size: 0.82rem;
   font-weight: 500;
   white-space: nowrap;
@@ -180,12 +185,26 @@ html, body {
   text-overflow: ellipsis;
   color: rgba(255,255,255,0.9);
   direction: rtl;
+  text-align: center;
 }
+.btn-speed {
+  flex-shrink: 0;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 10px;
+  color: rgba(255,255,255,0.85);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 7px;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+}
+.btn-speed:hover { background: rgba(255,255,255,0.22); }
 .player-controls {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  gap: 12px;
 }
 .btn-ctrl {
   background: none;
@@ -198,17 +217,25 @@ html, body {
   justify-content: center;
   border-radius: 50%;
   transition: color .15s;
+  position: relative;
 }
 .btn-ctrl:hover { color: #fff; }
-.btn-ctrl.active { color: var(--green); }
 .btn-play-pause {
   background: #fff;
   border-radius: 50%;
-  width: 44px; height: 44px;
+  width: 48px; height: 48px;
   color: #111;
   flex-shrink: 0;
 }
 .btn-play-pause:hover { background: #ddd; color: #111; }
+.skip-label {
+  position: absolute;
+  bottom: 3px;
+  font-size: 0.5rem;
+  font-weight: 700;
+  color: currentColor;
+  pointer-events: none;
+}
 
 /* ── Seek slider ── */
 .player-progress-wrap {
@@ -222,7 +249,9 @@ html, body {
   white-space: nowrap;
   flex-shrink: 0;
   font-variant-numeric: tabular-nums;
+  min-width: 32px;
 }
+#player-dur { text-align: right; }
 .player-seek {
   flex: 1;
   height: 4px;
