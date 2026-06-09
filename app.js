@@ -269,16 +269,15 @@ function renderFiles(files) {
     }
 
     item.innerHTML = `
-      <div class="episode-num-col">
-        <span class="episode-num">${index + 1}</span>
-        <svg class="episode-play-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-          <polygon points="6 3 20 12 6 21 6 3"/>
-        </svg>
-      </div>
       <div class="episode-text">
         <div class="episode-name">${cleanName(file.name)}</div>
         <div class="episode-meta">${metaHtml}</div>
       </div>
+      <button class="episode-play-btn" aria-label="נגן">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <polygon points="6 3 20 12 6 21 6 3"/>
+        </svg>
+      </button>
     `;
 
     item.addEventListener('click', () => playFile(file.id, file.name, file.createdTime));
@@ -378,7 +377,6 @@ function syncPlayPauseIcons(playing) {
   document.getElementById('icon-pause').classList.toggle('hidden', !playing);
   document.getElementById('mini-icon-play').classList.toggle('hidden', playing);
   document.getElementById('mini-icon-pause').classList.toggle('hidden', !playing);
-  document.getElementById('player-artwork').classList.toggle('playing', playing);
 }
 
 audio.addEventListener('play', () => syncPlayPauseIcons(true));
