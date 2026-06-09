@@ -54,6 +54,12 @@ html, body {
 }
 
 .signin-logo { margin-bottom: 28px; }
+.signin-logo-img {
+  width: 160px;
+  height: 160px;
+  object-fit: contain;
+  border-radius: 16px;
+}
 
 .signin-card h1 {
   font-size: 2.4rem;
@@ -138,6 +144,11 @@ html, body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.topbar-logo-img {
+  height: 44px;
+  width: auto;
+  object-fit: contain;
 }
 .btn-signout-top {
   background: #fef2f2;
@@ -567,12 +578,13 @@ html, body {
   flex-shrink: 0;
   width: 44px; height: 44px;
   border-radius: 8px;
+  overflow: hidden;
   background: var(--surface-2);
   border: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-3);
+}
+.mini-art-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
 }
 
 .mini-info { flex: 1; min-width: 0; }

@@ -308,7 +308,12 @@ async function playFile(fileId, name, date) {
 
   // Media Session
   if ('mediaSession' in navigator) {
-    navigator.mediaSession.metadata = new MediaMetadata({ title: cleanTitle, artist: 'ידידיה' });
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: cleanTitle,
+      artist: 'הרב ידידיה ישראל',
+      album: 'בונים אהבה לאור ההלכה',
+      artwork: [{ src: 'podcast_pi.png', sizes: '512x512', type: 'image/png' }],
+    });
     navigator.mediaSession.setActionHandler('play', () => audio.play());
     navigator.mediaSession.setActionHandler('pause', () => audio.pause());
     navigator.mediaSession.setActionHandler('previoustrack', playPrev);
