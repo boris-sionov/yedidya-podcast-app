@@ -2,24 +2,38 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#1a6b3a" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#121212" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   <title>ידידיה — שיעורים</title>
   <link rel="stylesheet" href="app.css" />
   <script src="config.js"></script>
 </head>
 <body>
 
-  <!-- Sign-in screen -->
+  <!-- ── Sign-in ── -->
   <div id="screen-signin" class="screen">
     <div class="signin-card">
-      <div class="app-icon">🎙️</div>
+      <div class="signin-logo">
+        <svg viewBox="0 0 110 110" width="110" height="110" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#2d9e5f"/>
+              <stop offset="100%" stop-color="#0d3d22"/>
+            </linearGradient>
+          </defs>
+          <rect width="110" height="110" rx="26" fill="url(#lg1)"/>
+          <rect x="41" y="16" width="28" height="46" rx="14" fill="white" opacity="0.95"/>
+          <path d="M24 55 Q24 85 55 85 Q86 85 86 55" stroke="white" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <line x1="55" y1="85" x2="55" y2="100" stroke="white" stroke-width="5" stroke-linecap="round"/>
+          <line x1="38" y1="100" x2="72" y2="100" stroke="white" stroke-width="5" stroke-linecap="round"/>
+        </svg>
+      </div>
       <h1>ידידיה</h1>
-      <p class="subtitle">שיעורים</p>
-      <button id="btn-signin" class="btn-primary">
-        <svg width="20" height="20" viewBox="0 0 48 48" style="vertical-align:middle;margin-left:8px">
+      <p class="signin-subtitle">שיעורים</p>
+      <button id="btn-signin" class="btn-google">
+        <svg width="18" height="18" viewBox="0 0 48 48" style="flex-shrink:0">
           <path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.2l6.7-6.7C35.8 2.5 30.3 0 24 0 14.8 0 6.9 5.4 3 13.3l7.8 6C12.7 13.1 17.9 9.5 24 9.5z"/>
           <path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4.1 7.1-10.1 7.1-17z"/>
           <path fill="#FBBC05" d="M10.8 28.7A14.5 14.5 0 0 1 9.5 24c0-1.6.3-3.2.8-4.7L2.5 13.3A24 24 0 0 0 0 24c0 3.8.9 7.4 2.5 10.7l8.3-6z"/>
@@ -31,12 +45,21 @@
     </div>
   </div>
 
-  <!-- File list screen -->
+  <!-- ── Episode list ── -->
   <div id="screen-list" class="screen hidden">
     <header class="topbar">
-      <span class="topbar-title">ידידיה — שיעורים</span>
+      <div class="topbar-brand">
+        <svg viewBox="0 0 36 36" width="30" height="30" xmlns="http://www.w3.org/2000/svg">
+          <rect width="36" height="36" rx="8" fill="#1fdf64"/>
+          <rect x="13" y="4" width="10" height="17" rx="5" fill="#121212"/>
+          <path d="M7 18 Q7 30 18 30 Q29 30 29 18" stroke="#121212" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <line x1="18" y1="30" x2="18" y2="34" stroke="#121212" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="12" y1="34" x2="24" y2="34" stroke="#121212" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+        <span class="topbar-title">ידידיה</span>
+      </div>
       <button id="btn-signout" class="btn-icon" title="יציאה">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
           <polyline points="16 17 21 12 16 7"/>
           <line x1="21" y1="12" x2="9" y2="12"/>
@@ -45,8 +68,7 @@
     </header>
 
     <div id="list-status" class="status-bar hidden"></div>
-
-    <div id="file-list" class="file-list"></div>
+    <div id="file-list" class="episode-list"></div>
 
     <div id="loading" class="loading-overlay hidden">
       <div class="spinner"></div>
@@ -54,50 +76,131 @@
     </div>
   </div>
 
-  <!-- Player bar -->
-  <div id="player-bar" class="player-bar hidden">
-    <div class="player-top-row">
-      <div id="player-title" class="player-title"></div>
-      <button id="btn-speed" class="btn-speed" aria-label="מהירות ניגון">1×</button>
-    </div>
-    <div class="player-controls">
-      <button id="btn-prev" class="btn-ctrl" aria-label="הקודם">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linecap="round">
-          <polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5" stroke-width="2"/>
+  <!-- ── Full player (always in DOM, slides up via transform) ── -->
+  <div id="screen-player" class="player-screen">
+    <div class="player-header">
+      <button id="btn-player-close" class="btn-player-close" aria-label="סגור">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"/>
         </svg>
       </button>
-      <button id="btn-skip-back" class="btn-ctrl btn-skip" aria-label="אחורה 15 שניות">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.53"/>
+      <span class="now-playing-label">מתנגן עכשיו</span>
+      <div style="width:44px"></div>
+    </div>
+
+    <div class="player-art-wrap">
+      <div class="player-artwork" id="player-artwork">
+        <svg viewBox="0 0 300 300" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="artGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#1a6b3a"/>
+              <stop offset="100%" stop-color="#071f10"/>
+            </linearGradient>
+          </defs>
+          <rect width="300" height="300" fill="url(#artGrad)"/>
+          <!-- Sound wave bars (decorative) -->
+          <rect x="30" y="120" width="12" height="60" rx="6" fill="white" opacity="0.15"/>
+          <rect x="52" y="100" width="12" height="100" rx="6" fill="white" opacity="0.12"/>
+          <rect x="74" y="130" width="12" height="40" rx="6" fill="white" opacity="0.15"/>
+          <rect x="204" y="120" width="12" height="60" rx="6" fill="white" opacity="0.15"/>
+          <rect x="226" y="100" width="12" height="100" rx="6" fill="white" opacity="0.12"/>
+          <rect x="248" y="130" width="12" height="40" rx="6" fill="white" opacity="0.15"/>
+          <!-- Mic body -->
+          <rect x="117" y="52" width="66" height="96" rx="33" fill="white" opacity="0.92"/>
+          <!-- Mic arc -->
+          <path d="M72 145 Q72 215 150 215 Q228 215 228 145" stroke="white" stroke-width="10" fill="none" stroke-linecap="round" opacity="0.88"/>
+          <!-- Stand -->
+          <line x1="150" y1="215" x2="150" y2="248" stroke="white" stroke-width="10" stroke-linecap="round" opacity="0.88"/>
+          <line x1="115" y1="248" x2="185" y2="248" stroke="white" stroke-width="10" stroke-linecap="round" opacity="0.88"/>
+          <!-- Text -->
+          <text x="150" y="286" text-anchor="middle" font-size="19" fill="white" opacity="0.55" font-family="-apple-system, Arial, sans-serif" font-weight="600" letter-spacing="2">ידידיה</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="player-meta">
+      <div id="player-title" class="player-track-title">בחר שיעור</div>
+      <div class="player-track-artist">ידידיה</div>
+    </div>
+
+    <div class="player-progress">
+      <input id="player-seek" type="range" min="0" max="100" value="0" class="player-seek" />
+      <div class="player-times" dir="ltr">
+        <span id="player-pos">0:00</span>
+        <span id="player-dur">0:00</span>
+      </div>
+    </div>
+
+    <div class="player-controls">
+      <button id="btn-prev" class="btn-ctrl-player" aria-label="הקודם">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+          <polygon points="19 20 9 12 19 4 19 20"/>
+          <rect x="4" y="4" width="3" height="16" rx="1"/>
+        </svg>
+      </button>
+      <button id="btn-skip-back" class="btn-ctrl-player btn-skip" aria-label="אחורה 15 שניות">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="1 4 1 10 7 10"/>
+          <path d="M3.51 15a9 9 0 1 0 .49-3.53"/>
         </svg>
         <span class="skip-label">15</span>
       </button>
-      <button id="btn-play" class="btn-ctrl btn-play-pause" aria-label="נגן/עצור">
-        <svg id="icon-play" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        <svg id="icon-pause" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" class="hidden"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+      <button id="btn-play" class="btn-play-main" aria-label="נגן/עצור">
+        <svg id="icon-play" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+        <svg id="icon-pause" width="28" height="28" viewBox="0 0 24 24" fill="currentColor" class="hidden"><rect x="5" y="4" width="4" height="16" rx="1"/><rect x="15" y="4" width="4" height="16" rx="1"/></svg>
       </button>
-      <button id="btn-skip-fwd" class="btn-ctrl btn-skip" aria-label="קדימה 30 שניות">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.49-3.53"/>
+      <button id="btn-skip-fwd" class="btn-ctrl-player btn-skip" aria-label="קדימה 30 שניות">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="23 4 23 10 17 10"/>
+          <path d="M20.49 15a9 9 0 1 1-.49-3.53"/>
         </svg>
         <span class="skip-label">30</span>
       </button>
-      <button id="btn-next" class="btn-ctrl" aria-label="הבא">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linecap="round">
-          <polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19" stroke-width="2"/>
+      <button id="btn-next" class="btn-ctrl-player" aria-label="הבא">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+          <polygon points="5 4 15 12 5 20 5 4"/>
+          <rect x="17" y="4" width="3" height="16" rx="1"/>
         </svg>
       </button>
     </div>
-    <div class="player-progress-wrap">
-      <span id="player-pos">0:00</span>
-      <input id="player-seek" type="range" min="0" max="100" value="0" class="player-seek" />
-      <span id="player-dur">0:00</span>
+
+    <div class="player-footer">
+      <button id="btn-speed" class="btn-speed" aria-label="מהירות ניגון">1×</button>
     </div>
   </div>
 
-  <!-- Hidden HTML5 audio element -->
-  <audio id="audio" preload="none"></audio>
+  <!-- ── Mini player (always in DOM, slides up) ── -->
+  <div id="mini-player" class="mini-player">
+    <div class="mini-inner" id="mini-player-tap">
+      <div class="mini-art">
+        <svg viewBox="0 0 48 48" width="44" height="44" xmlns="http://www.w3.org/2000/svg">
+          <rect width="48" height="48" rx="10" fill="#1a6b3a"/>
+          <rect x="17" y="5" width="14" height="22" rx="7" fill="white" opacity="0.9"/>
+          <path d="M9 24 Q9 38 24 38 Q39 38 39 24" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <line x1="24" y1="38" x2="24" y2="45" stroke="white" stroke-width="3" stroke-linecap="round"/>
+          <line x1="17" y1="45" x2="31" y2="45" stroke="white" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="mini-info">
+        <div id="mini-title" class="mini-title-text">ידידיה</div>
+        <div class="mini-prog-track">
+          <div id="mini-progress" class="mini-prog-fill"></div>
+        </div>
+      </div>
+    </div>
+    <button id="mini-play" class="mini-btn" aria-label="נגן/עצור">
+      <svg id="mini-icon-play" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+      <svg id="mini-icon-pause" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" class="hidden"><rect x="5" y="4" width="4" height="16" rx="1"/><rect x="15" y="4" width="4" height="16" rx="1"/></svg>
+    </button>
+    <button id="mini-next" class="mini-btn" aria-label="הבא">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+        <polygon points="5 4 15 12 5 20 5 4"/>
+        <rect x="17" y="4" width="3" height="16" rx="1"/>
+      </svg>
+    </button>
+  </div>
 
+  <audio id="audio" preload="none"></audio>
   <script src="app.js"></script>
 </body>
 </html>
