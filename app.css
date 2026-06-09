@@ -228,14 +228,6 @@ html, body {
   flex-shrink: 0;
 }
 .btn-play-pause:hover { background: #ddd; color: #111; }
-.skip-label {
-  position: absolute;
-  bottom: 3px;
-  font-size: 0.5rem;
-  font-weight: 700;
-  color: currentColor;
-  pointer-events: none;
-}
 
 /* ── Seek slider ── */
 .player-progress-wrap {
