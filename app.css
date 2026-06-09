@@ -411,9 +411,9 @@ html, body {
 .btn-ctrl-player {
   background: none;
   border: none;
-  color: var(--text-2);
+  color: rgba(255,255,255,0.8);
   cursor: pointer;
-  padding: 10px;
+  padding: 6px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -424,17 +424,6 @@ html, body {
 .btn-ctrl-player:hover  { color: var(--text); transform: scale(1.08); }
 .btn-ctrl-player:active { transform: scale(0.93); }
 
-.btn-skip { position: relative; }
-.skip-label {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 0.44rem;
-  font-weight: 800;
-  line-height: 1;
-  pointer-events: none;
-  color: inherit;
-}
 
 .btn-play-main {
   background: var(--text);
