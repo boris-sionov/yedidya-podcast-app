@@ -465,6 +465,28 @@ document.getElementById('mini-player-tap').addEventListener('click', openPlayer)
 document.getElementById('mini-play').addEventListener('click', togglePlayPause);
 document.getElementById('mini-next').addEventListener('click', playNext);
 
+// Search
+document.getElementById('btn-search-toggle').addEventListener('click', () => {
+  const bar = document.getElementById('search-bar');
+  const input = document.getElementById('search-input');
+  bar.classList.toggle('hidden');
+  if (!bar.classList.contains('hidden')) {
+    input.focus();
+    input.value = '';
+    renderFiles(filesList);
+  } else {
+    input.value = '';
+    renderFiles(filesList);
+  }
+});
+
+document.getElementById('search-input').addEventListener('input', (e) => {
+  const q = e.target.value.trim();
+  if (!q) { renderFiles(filesList); return; }
+  const lower = q.toLowerCase();
+  renderFiles(filesList.filter(f => f.name.toLowerCase().includes(lower)));
+});
+
 document.getElementById('btn-signout').addEventListener('click', () => {
   clearSession();
   accessToken = null;
