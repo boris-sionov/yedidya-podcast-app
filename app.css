@@ -228,6 +228,17 @@ html, body {
   flex-shrink: 0;
 }
 .btn-play-pause:hover { background: #ddd; color: #111; }
+.btn-skip { position: relative; }
+.skip-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.48rem;
+  font-weight: 800;
+  line-height: 1;
+  pointer-events: none;
+}
 
 /* ── Seek slider ── */
 .player-progress-wrap {
