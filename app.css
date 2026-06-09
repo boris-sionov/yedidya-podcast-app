@@ -406,6 +406,7 @@ html, body {
   align-items: center;
   justify-content: space-between;
   padding: 8px 12px 4px;
+  direction: ltr;
 }
 .btn-ctrl-player {
   background: none;
